@@ -118,3 +118,70 @@ while jogoLigado:
         print(f"Palavra secreta: {mostrar}.")
 
 
+print("Jogo de cartas BlackJack")
+import random
+
+cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+
+def pegandoDuasCartas():
+    return random.choice(cards)
+
+def calculando(pontos):
+    if sum(pontos) == 21 and len(pontos) == 2:
+        return 0
+    elif 11 in pontos and sum(pontos) > 21:
+        pontos.remove(11)
+        pontos.append(1)
+    return sum(pontos)
+
+def comparando(playerPontos, computerPontos):
+    if playerPontos > 21 and computerPontos > 21:
+        return "Ninguém ganhou os dois passaram do limite."
+    elif playerPontos == 0:
+        return "Você ganhou com um BlackJack"
+    elif computerPontos == 0:
+        return "Computador ganhou com um BlackJack"
+    elif playerPontos > 21:
+        return "Você passou do limite. Infelizmente você perdeu."
+    elif computerPontos > 21:
+        return "O computador passou do limite. Infelizmente você perdeu."
+    elif playerPontos == computerPontos:
+        return "Empate."
+    else:
+        return "Você perdeu."
+
+def playGame():
+    playerCartas = []
+    computerCartas = []
+    end_game = False
+
+    for _ in range(2):
+        playerCartas.append(pegandoDuasCartas())
+        computerCartas.append(pegandoDuasCartas())
+
+    while not end_game:
+        pontosPlayer = calculando(playerCartas)
+        pontosComputer = calculando(computerCartas)
+        print(f"Player Deck: {playerCartas}. Pontos jogador: {pontosPlayer}.")
+        print(f"Computer Deck: {computerCartas[0]}.")
+
+        if pontosPlayer == 0 or pontosComputer == 0 or pontosPlayer > 21:
+            end_game = True
+        else:
+            hit = input(f"Você quer pegar mais cartas? ")
+            if hit == "sim":
+                playerCartas.append(pegandoDuasCartas())
+            else:
+                end_game = True
+
+        while pontosComputer != 0 and pontosComputer < 17:
+            computerCartas.append(pegandoDuasCartas())
+            pontosComputer = calculando(computerCartas)
+
+    resultado = comparando(pontosPlayer, pontosComputer)
+    print(f"Player Deck: {playerCartas}. Player Score: {pontosPlayer}.")
+    print(f"Computer Deck: {computerCartas}. Computer Pontos: {pontosComputer}")
+    print(resultado)
+
+while input("Você quer jogar novamente? 'Sim' ou 'Não' ").lower() == "sim":
+    playGame()
